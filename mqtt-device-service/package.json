@@ -10,5 +10,9 @@
   "license": "ISC",
   "devDependencies": {
     "serverless-offline": "^5.5.1"
+  },
+  "dependencies": {
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.9.2"
   }
 }
