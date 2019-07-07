@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const NoteModel = require('./models/Note');
+const MqttSettingsModel = require('./models/MqttSettings');
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -10,8 +11,8 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT
   }
 );
-const Note = NoteModel(sequelize, Sequelize);
-const Models = { Note };
+const MqttSettings = MqttSettingsModel(sequelize, Sequelize);
+const Models = { MqttSettings };
 const connection = {};
 
 module.exports = async () => {

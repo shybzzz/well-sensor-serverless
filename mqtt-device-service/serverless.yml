@@ -74,37 +74,37 @@ functions:
     handler: handler.create
     events:
       - http:
-          path: notes
+          path: mqtt-settings
           method: post
           cors: true
-  getOne:
-    handler: handler.getOne
-    events:
-      - http:
-          path: notes/{id}
-          method: get
-          cors: true
-  getAll:
-    handler: handler.getAll
-    events:
-      - http:
-          path: notes
-          method: get
-          cors: true
-  update:
-    handler: handler.update
-    events:
-      - http:
-          path: notes/{id}
-          method: put
-          cors: true
-  destroy:
-    handler: handler.destroy
-    events:
-      - http:
-          path: notes/{id}
-          method: delete
-          cors: true
+  # getOne:
+  #   handler: handler.getOne
+  #   events:
+  #     - http:
+  #         path: notes/{id}
+  #         method: get
+  #         cors: true
+  # getAll:
+  #   handler: handler.getAll
+  #   events:
+  #     - http:
+  #         path: notes
+  #         method: get
+  #         cors: true
+  # update:
+  #   handler: handler.update
+  #   events:
+  #     - http:
+  #         path: notes/{id}
+  #         method: put
+  #         cors: true
+  # destroy:
+  #   handler: handler.destroy
+  #   events:
+  #     - http:
+  #         path: notes/{id}
+  #         method: delete
+  #         cors: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
