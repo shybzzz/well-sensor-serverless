@@ -18,7 +18,7 @@ module.exports.healthCheck = async () => {
   };
 };
 
-module.exports.create = async event => {
+module.exports.createMqttSettings = async event => {
   try {
     const { MqttSettings } = await connectToDatabase();
     const mqttSettings = await MqttSettings.create(JSON.parse(event.body));
@@ -31,6 +31,44 @@ module.exports.create = async event => {
       statusCode: err.statusCode || 500,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Could not create Mqtt Settings.'
+    };
+  }
+};
+
+module.exports.getAllMqttSettings = async () => {
+  try {
+    const { MqttSettings } = await connectToDatabase();
+    const mqttSettings = await MqttSettings.findAll();
+    return {
+      statusCode: 200,
+      body: JSON.stringify(mqttSettings)
+    };
+  } catch (err) {
+    return {
+      statusCode: err.statusCode || 500,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Could not fetch the notes.'
+    };
+  }
+};
+
+module.exports.createMqttDevice = async event => {
+  try {
+    const mqttSettingId = event.pathParameters.mqttSettingId;
+    let body = JSON.parse(event.body);
+    body.mqttSettingId = mqttSettingId;
+
+    const { MqttDevice } = await connectToDatabase();
+    const mqttDevice = await MqttDevice.create(body);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(mqttDevice)
+    };
+  } catch (err) {
+    return {
+      statusCode: err.statusCode || 500,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Could not create Mqtt Device.'
     };
   }
 };
@@ -53,23 +91,6 @@ module.exports.create = async event => {
 //       statusCode: err.statusCode || 500,
 //       headers: { 'Content-Type': 'text/plain' },
 //       body: err.message || 'Could not fetch the Note.'
-//     };
-//   }
-// };
-
-// module.exports.getAll = async () => {
-//   try {
-//     const { Note } = await connectToDatabase();
-//     const notes = await Note.findAll();
-//     return {
-//       statusCode: 200,
-//       body: JSON.stringify(notes)
-//     };
-//   } catch (err) {
-//     return {
-//       statusCode: err.statusCode || 500,
-//       headers: { 'Content-Type': 'text/plain' },
-//       body: 'Could not fetch the notes.'
 //     };
 //   }
 // };

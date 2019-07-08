@@ -70,25 +70,36 @@ functions:
           path: /
           method: get
           cors: true
-  create:
-    handler: handler.create
+
+  createMqttSettings:
+    handler: handler.createMqttSettings
     events:
       - http:
           path: mqtt-settings
           method: post
           cors: true
+
+  getAllMqttSettings:
+    handler: handler.getAllMqttSettings
+    events:
+      - http:
+          path: mqtt-settings
+          method: get
+          cors: true
+
+  createMqttDevice:
+    handler: handler.createMqttDevice
+    events:
+      - http:
+          path: mqtt-settings/{mqttSettingId}/mqtt-device
+          method: post
+          cors: true
+
   # getOne:
   #   handler: handler.getOne
   #   events:
   #     - http:
   #         path: notes/{id}
-  #         method: get
-  #         cors: true
-  # getAll:
-  #   handler: handler.getAll
-  #   events:
-  #     - http:
-  #         path: notes
   #         method: get
   #         cors: true
   # update:

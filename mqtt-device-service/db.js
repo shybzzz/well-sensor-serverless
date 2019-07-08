@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const MqttSettingsModel = require('./models/MqttSettings');
+const MqttDeviceModel = require('./models/MqttDevice');
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -12,7 +13,10 @@ const sequelize = new Sequelize(
   }
 );
 const MqttSettings = MqttSettingsModel(sequelize, Sequelize);
-const Models = { MqttSettings };
+const MqttDevice = MqttDeviceModel(sequelize, Sequelize);
+MqttSettings.hasMany(MqttDevice);
+MqttDevice.belongsTo(MqttSettings);
+const Models = { MqttSettings, MqttDevice };
 const connection = {};
 
 module.exports = async () => {
