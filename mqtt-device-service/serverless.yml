@@ -6,8 +6,8 @@
 # Happy Coding!
 
 service: mqtt-device-service # NOTE: update this with your service name
-#app: your-app-name
-#tenant: your-tenant-name
+tenant: rostykromanyshyn
+app: well-sensor
 
 custom:
   secrets: ${file(secrets.json)}
