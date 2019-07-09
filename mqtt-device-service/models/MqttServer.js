@@ -1,5 +1,5 @@
 module.exports = function(sequelize, type) {
-  return sequelize.define('mqtt_settings', {
+  return sequelize.define('mqtt_servers', {
     id: {
       type: type.DataTypes.UUID,
       primaryKey: true,
@@ -7,7 +7,7 @@ module.exports = function(sequelize, type) {
     },
     server: { type: type.STRING, allowNull: false },
     wssPort: { type: type.INTEGER, allowNull: false },
-    user: { type: type.STRING, allowNull: false },
-    description: { type: type.STRING }
+    description: { type: type.STRING },
+    deletedAt: { type: type.DATE }
   });
 };

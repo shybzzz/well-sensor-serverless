@@ -1,6 +1,10 @@
 const Sequelize = require('sequelize');
-const MqttSettingsModel = require('./models/MqttSettings');
+
+const MqttServerModel = require('./models/MqttServer');
+const MqttUserModel = require('./models/MqttUser');
 const MqttDeviceModel = require('./models/MqttDevice');
+const HwGut800Model = require('./models/HwGut800');
+const EcoReferenceDepthModel = require('./models/EcoReferenceDepth');
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -12,11 +16,32 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT
   }
 );
-const MqttSettings = MqttSettingsModel(sequelize, Sequelize);
+
+const EcoReferenceDepth = EcoReferenceDepthModel(sequelize, Sequelize);
+const HwGut800 = HwGut800Model(sequelize, Sequelize);
 const MqttDevice = MqttDeviceModel(sequelize, Sequelize);
-MqttSettings.hasMany(MqttDevice);
-MqttDevice.belongsTo(MqttSettings);
-const Models = { MqttSettings, MqttDevice };
+const MqttServer = MqttServerModel(sequelize, Sequelize);
+const MqttUser = MqttUserModel(sequelize, Sequelize);
+
+MqttServer.hasMany(MqttUser);
+MqttUser.belongsTo(MqttServer);
+MqttUser.hasMany(MqttDevice);
+MqttDevice.belongsTo(MqttUser);
+MqttDevice.hasMany(EcoReferenceDepth);
+EcoReferenceDepth.belongsTo(MqttDevice);
+MqttDevice.hasMany(HwGut800);
+HwGut800.belongsTo(MqttDevice);
+HwGut800.hasMany(EcoReferenceDepth);
+EcoReferenceDepth.belongsTo(MqttDevice);
+
+const Models = {
+  EcoReferenceDepth,
+  HwGut800,
+  MqttDevice,
+  MqttServer,
+  MqttUser
+};
+
 const connection = {};
 
 module.exports = async () => {
