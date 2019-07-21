@@ -122,3 +122,49 @@ module.exports.saveMqttUser = async (event, context) => {
     return failure('Could not save Mqtt MqttUser.');
   }
 };
+
+module.exports.getMqttDevices = async (event, context) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  try {
+    const pathParameters = event.pathParameters;
+    const mqttUserId = pathParameters && pathParameters.id;
+    const { MqttDevice } = await connectToDatabase();
+    const mqttDevices = await MqttDevice.findAll({
+      where: { deletedAt: null, mqttUserId: mqttUserId }
+    });
+    return success(mqttDevices);
+  } catch (err) {
+    return failure('Could not fetch Mqtt Devices.');
+  }
+};
+
+module.exports.saveMqttDevice = async (event, context) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  try {
+    const { MqttDevice } = await connectToDatabase();
+    const input = JSON.parse(event.body);
+    const pathParameters = event.pathParameters;
+    const mqttDeviceId = pathParameters && pathParameters.id;
+    const mqttDevice =
+      mqttDeviceId && (await MqttDevice.findByPk(mqttDeviceId));
+
+    let result;
+    if (!mqttDevice) {
+      result = await MqttDevice.create(JSON.parse(event.body));
+    } else {
+      if (input.deviceName) mqttDevice.deviceName = input.deviceName;
+      if (input.sensorType) mqttDevice.sensorType = input.sensorType;
+      if (input.description) mqttDevice.description = input.description;
+      if (input.mqttUserId) mqttDevice.mqttUserId = input.mqttUserId;
+      if (input.deletedAt) mqttDevice.deletedAt = input.deletedAt;
+
+      await mqttDevice.save();
+      result = mqttDevice;
+    }
+
+    return success(result);
+  } catch (err) {
+    console.error(err);
+    return failure('Could not save Mqtt MqttDevice.');
+  }
+};
