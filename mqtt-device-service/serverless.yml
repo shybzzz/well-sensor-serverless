@@ -71,28 +71,44 @@ functions:
           method: get
           cors: true
 
-  createMqttSettings:
-    handler: handler.createMqttSettings
+  getAllMqttServers:
+    handler: handler.getAllMqttServers
     events:
       - http:
-          path: mqtt-settings
-          method: post
-          cors: true
-
-  getAllMqttSettings:
-    handler: handler.getAllMqttSettings
-    events:
-      - http:
-          path: mqtt-settings
+          path: mqtt-servers
           method: get
           cors: true
 
-  createMqttDevice:
-    handler: handler.createMqttDevice
+  saveMqttServer:
+    handler: handler.saveMqttServer
     events:
       - http:
-          path: mqtt-settings/{mqttSettingId}/mqtt-device
-          method: post
+          path: mqtt-servers/{id}
+          method: put
+          cors: true
+      - http:
+          path: mqtt-servers
+          method: put
+          cors: true
+
+  getMqttUsers:
+    handler: handler.getMqttUsers
+    events:
+      - http:
+          path: mqtt-servers/{id}/mqtt-users
+          method: get
+          cors: true
+
+  saveMqttUser:
+    handler: handler.saveMqttUser
+    events:
+      - http:
+          path: mqtt-users/{id}
+          method: put
+          cors: true
+      - http:
+          path: mqtt-users
+          method: put
           cors: true
 
   # getOne:

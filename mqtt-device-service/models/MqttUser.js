@@ -6,6 +6,7 @@ module.exports = function(sequelize, type) {
       defaultValue: type.UUIDV1
     },
     user: { type: type.STRING, allowNull: false },
+    mqttPassword: { type: type.STRING, allowNull: false },
     description: { type: type.STRING },
     deletedAt: { type: type.DATE }
   });
