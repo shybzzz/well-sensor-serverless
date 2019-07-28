@@ -1,8 +1,11 @@
 service:
-  name: aws-nodejs-typescript
+  name: mqtt-data-service
 
 tenant: rostykromanyshyn
 app: well-sensor
+
+custom:
+  secrets: ${file(secrets.json)}
 
 # Add the serverless-webpack plugin
 plugins:
@@ -14,10 +17,42 @@ provider:
   runtime: nodejs10.x
   region: eu-west-1
 
+  environment:
+    BUCKET_NAME: ${self:custom.secrets.BUCKET_NAME}
+    ATHENA_BUCKET_NAME: ${self:custom.secrets.ATHENA_BUCKET_NAME}
+    DATABASE_NAME: ${self:custom.secrets.DATABASE_NAME}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 's3:GetBucketLocation'
+        - 's3:GetObject'
+        - 's3:ListBucket'
+        - 's3:ListBucketMultipartUploads'
+        - 's3:ListMultipartUploadParts'
+        - 's3:AbortMultipartUpload'
+        - 's3:CreateBucket'
+        - 's3:PutObject'
+      Resource:
+        - 'arn:aws:s3:::${self:custom.secrets.BUCKET_NAME}/*'
+        - 'arn:aws:s3:::${self:custom.secrets.BUCKET_NAME}'
+        - 'arn:aws:s3:::${self:custom.secrets.ATHENA_BUCKET_NAME}'
+        - 'arn:aws:s3:::${self:custom.secrets.ATHENA_BUCKET_NAME}/*'
+    - Effect: 'Allow'
+      Action:
+        - 'glue:*'
+      Resource:
+        - '*'
+    - Effect: 'Allow'
+      Action:
+        - 'athena:*'
+      Resource:
+        - '*'
+
 functions:
-  hello:
-    handler: handler.hello
+  getLastSeen:
+    handler: handler.getLastSeen
     events:
       - http:
           method: get
-          path: hello
+          path: last-seen
