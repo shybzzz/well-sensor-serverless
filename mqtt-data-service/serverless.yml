@@ -56,3 +56,17 @@ functions:
       - http:
           method: get
           path: last-seen
+
+  getLastRecords:
+    handler: handler.getLastRecords
+    events:
+      - http:
+          method: get
+          path: last-records
+
+  countPerPeriod:
+    handler: handler.countPerPeriod
+    events:
+      - http:
+          method: get
+          path: count/group-by/{dateTrunc}
