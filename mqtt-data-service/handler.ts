@@ -62,3 +62,34 @@ export const countPerPeriod: APIGatewayProxyHandler = async (
     return failure(`Could not count per period`);
   }
 };
+
+export const getDataPerPeriod: APIGatewayProxyHandler = async (
+  event,
+  context
+) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  try {
+    const pathParameters = event.pathParameters;
+    const dateTrunc = pathParameters && pathParameters.dateTrunc;
+
+    const queryStringParameters = event.queryStringParameters;
+    const startDate = queryStringParameters && queryStringParameters.startDate;
+    const endDate = queryStringParameters && queryStringParameters.endDate;
+    const device = queryStringParameters && queryStringParameters.device;
+    const properties =
+      queryStringParameters && queryStringParameters.properties;
+    if (!(dateTrunc && startDate && endDate && device && properties)) {
+      return failure('Missing parameters');
+    }
+    const data = await DataRepository.dataPerPeriod(
+      device,
+      dateTrunc,
+      startDate,
+      endDate,
+      properties
+    );
+    return success(data.records);
+  } catch (er) {
+    return failure(`Could not count per period`);
+  }
+};

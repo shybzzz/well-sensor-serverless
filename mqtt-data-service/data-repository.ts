@@ -46,9 +46,36 @@ export function countPerPeriod(
       WHERE ${dateTrunc} >= CAST('${startDate}' AS DATE)
       AND ${dateTrunc} < CAST('${endDate}' AS DATE)
       GROUP BY ${dateTrunc}
+      ORDER BY ${dateTrunc} DESC
       `
     )
     .toPromise();
 }
 
-export const DataRepository = { getLastRecords, getLastSeen, countPerPeriod };
+export function dataPerPeriod(
+  device: string,
+  dateTrunc: string,
+  startDate: string,
+  endDate: string,
+  properties: string
+): Promise<AthenaExecutionResult<{ count: string }>> {
+  return client
+    .execute<{ count: string }>(
+      `
+      SELECT ${dateTrunc}, ${properties}
+      FROM  "combined_sensor"."${device}"
+      WHERE ${dateTrunc} >= CAST('${startDate}' AS DATE)
+      AND ${dateTrunc} < CAST('${endDate}' AS DATE)
+      GROUP BY ${dateTrunc}, ${properties}
+      ORDER BY ${dateTrunc} DESC
+      `
+    )
+    .toPromise();
+}
+
+export const DataRepository = {
+  getLastRecords,
+  getLastSeen,
+  countPerPeriod,
+  dataPerPeriod
+};

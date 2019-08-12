@@ -70,3 +70,10 @@ functions:
       - http:
           method: get
           path: count/group-by/{dateTrunc}
+  
+  getDataPerPeriod:
+    handler: handler.getDataPerPeriod
+    events:
+      - http:
+          method: get
+          path: data/group-by/{dateTrunc}
